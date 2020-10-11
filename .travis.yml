@@ -1,0 +1,27 @@
+sudo: required
+services:
+    - docker
+
+before_install:
+    - docker build -t tikare/react-test -f ./client/Dockerfile.dev ./client
+
+script:
+    - docker run -e CI=true tikare/react-test npm test
+
+after_success:
+    - docker build -t tikare/multi-client ./client
+    - docker build -t tikare/multi-nginx ./nginx
+    - docker build -t tikare/multi-server ./server
+    - docker build -t tikare/multi-worker ./worker
+  
+    # Login to docker CLI
+    - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin
+
+  
+    # Take these images and push to docker hub
+
+    - docker push tikare/multi-client
+    - docker push tikare/multi-nginx
+    - docker push tikare/multi-server
+    - docker push tikare/multi-worker
+
