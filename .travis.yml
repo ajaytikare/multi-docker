@@ -26,7 +26,17 @@ after_success:
     - docker push tikare/multi-worker
 
 
-
+deploy:
+    provider: elasticbeanstalk
+    region: us-east-2
+    app: multi-saanvi
+    env: MultiSaanvi-env
+    bucket_name: elasticbeanstalk-us-east-2-515113502899
+    bucket_path: saanvi-multi
+    on:
+        branch: master
+    access_key_id: $AWS_ACCESS_KEY
+    secret_access_key: $AWS_SECRET_KEY
 
     
 
